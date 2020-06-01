@@ -12,8 +12,7 @@
  *
  *  Currently, only bytes with values between 1 and 127 inclusive are allowed 
  *  to be sent via this protocol. Bytes above 127 will work, but could cause 
- *  errors if they are reserved bytes (see #define section below) and support
- *  for sending 0's is hopefully coming soon.
+ *  errors if they are reserved bytes (see #define section below)
  *
  *  Definitions:
  *    - Packet: Data in the form of {START}{MESSAGE}{PARITY}{END}
@@ -49,7 +48,7 @@
  *      1 M: {WRITE}{DATA}
  *      2 C: {ACK}
  *
- *  @author Dillon Lareau (dlareau)
+ *  @author Sebastian Mason (sebski123)
  */
 
 #pragma once
