@@ -158,7 +158,7 @@ void requestEvent()
   {
     char *message;
     message = stringQueueRemove(&_out_messages);
-    Wire.write(message, sizeof message);
+    Wire.write((unsigned char*)message, sizeof message);
     free(message);
   }
 
