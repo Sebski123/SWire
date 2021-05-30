@@ -13,6 +13,8 @@ stringQueue_t _in_messages;
 stringQueue_t _out_messages;
 volatile char currentCommand = NO_DATA;
 
+volatile bool bufferAlocFailed = false;
+
 const byte numChars = 32;
 char receivedChars[numChars];
 boolean newData = false;
@@ -123,6 +125,7 @@ void receiveEvent(int howMany)
   char *buffer = (char *)malloc(MAX_MSG_LEN + 1);
   if (buffer == NULL)
   { // Fail if buffer allocation failed
+    bufferAlocFailed = true;
     return;
   }
 
@@ -158,7 +161,7 @@ void requestEvent()
   {
     char *message;
     message = stringQueueRemove(&_out_messages);
-    Wire.write((unsigned char*)message, sizeof message);
+    Wire.write((unsigned char *)message, strlen(message));
     free(message);
   }
 
@@ -291,7 +294,7 @@ void SWireMaster::scanMessages()
 
   for (byte i = 0; i < _num_clients; i++)
   {
-    char* message= (char*) malloc(MAX_MSG_LEN + 1);
+    char *message = (char *)malloc(MAX_MSG_LEN + 1);
     msg[0] = (char)_clients[i];
     sendPacket(msg);
     if (Wire.requestFrom((int)_clients[i], 8) > 1)
@@ -363,6 +366,10 @@ int SWireClient::sendData(char *data)
  */
 int SWireClient::getData(char *buffer)
 {
+  if (bufferAlocFailed)
+  {
+    Serial.print(F("bufferAlocFailed"));
+  }
   char *message;
   if (stringQueueIsEmpty(&_in_messages))
   {
